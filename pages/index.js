@@ -22,7 +22,7 @@ function HomePage() {
             }}>
                 <Menu />
                 <Header />
-                <Timeline playlists={config.playlists}>
+                <Timeline playlists={config.playlists} favoritos={config.favoritos}>
                     Conteúdo
                 </Timeline>
             </div>
@@ -42,13 +42,18 @@ export default HomePage
 
 
 const StyledHeader = styled.div`
-    img {
+    .imagemBanner{
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+    }
+    .imagemPerfil {
         width: 80px;
         height: 80px;
         border-radius: 50%;
     }
     .user-info {
-        margin-top: 50px;
+        margin-top: 30px;
         display: flex;
         align-items: center;
         width: 100%;
@@ -59,9 +64,9 @@ const StyledHeader = styled.div`
 function Header() {
     return (
         <StyledHeader>
-            {/* <img src="banner" /> */}
+            <img className="imagemBanner" src="https://images.unsplash.com/photo-1548602088-9d12a4f9c10f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2052&q=80" />
             <section className="user-info">
-                <img src={`https://github.com/${config.github}.png`} />
+                <img className="imagemPerfil" src={`https://github.com/${config.github}.png`} />
                 <div>
                     <h2>
                         {config.name}
@@ -76,10 +81,9 @@ function Header() {
 }
 
 function Timeline(propriedades) {
-    // console.log("Dentro do componente", propriedades.playlists);
     const playlistNames = Object.keys(propriedades.playlists);
-    // Statement
-    // Retorno por expressão
+    const favoritos = Object.keys(propriedades.favoritos)
+
     return (
         <StyledTimeline>
             {playlistNames.map((playlistName) => {
@@ -87,13 +91,13 @@ function Timeline(propriedades) {
                 console.log(playlistName);
                 console.log(videos);
                 return (
-                    <section>
+                    <section className="secaoVideos">
                         <h2>{playlistName}</h2>
                         <div>
                             {videos.map((video) => {
                                 return (
                                     <a href={video.url}>
-                                        <img src={video.thumb} />
+                                        <img className="imagemVideo" src={video.thumb} />
                                         <span>
                                             {video.title}
                                         </span>
@@ -101,9 +105,34 @@ function Timeline(propriedades) {
                                 )
                             })}
                         </div>
+
                     </section>
                 )
             })}
-        </StyledTimeline>
+            {favoritos.map((favorito) => {
+                const fotos = propriedades.favoritos[favorito]
+                console.log(favorito)
+                console.log(fotos)
+                return (
+                    <section>
+                        <h2>{favorito}</h2>
+                        <div className="divFavoritos">
+                            {fotos.map((fotos) => {
+                                return (
+                                    <div className="fotoName">
+                                        <img className="imagemYoutuber" src={`https://github.com/${fotos.github}.png`} />
+                                        <span>
+                                            {fotos.nome}
+                                        </span>
+                                    </div>
+                                )
+                            })}
+                        </div>
+
+                    </section>
+                )
+            })}
+        </StyledTimeline>  
     )
 }
+

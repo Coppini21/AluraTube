@@ -5,12 +5,14 @@ export const StyledTimeline = styled.div`
   width: 100%;
   padding: 16px;
   overflow: hidden;
+
   h2 {
     font-size: 16px;
     margin-bottom: 16px;
     text-transform: capitalize;
   }
-  img {
+
+  .imagemVideo {
     aspect-ratio: 16/9;
     font-weight: 500;
     object-fit: cover;
@@ -18,7 +20,12 @@ export const StyledTimeline = styled.div`
     max-width: 210px;
     height: auto;
   }
-  section {
+
+  section{
+    padding: 16px;
+  }
+
+  .secaoVideos {
     width: 100%;
     padding: 0;
     overflow: hidden;
@@ -43,5 +50,23 @@ export const StyledTimeline = styled.div`
         }
       }
     }
+  }
+
+  .divFavoritos{
+    display: flex;
+    gap: 30px;
+  }
+
+  .fotoName{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .imagemYoutuber{
+    height: 130px;
+    width: 130px;
+    border-radius: 50%;
   }
 `;

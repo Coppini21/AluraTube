@@ -1,7 +1,8 @@
+import React from "react";
 import config from "../config.json";
 import styled from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
-import Menu from "../src/components/Menu";
+import Menu from "../src/components/Menu/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
 
 function HomePage() {
@@ -9,7 +10,8 @@ function HomePage() {
         // backgroundColor: "red" 
     };
 
-    // console.log(config.playlists);
+    const [valorDoFiltro, setValorDoFiltro] = React.useState("");
+    
 
     return (
         <>
@@ -20,9 +22,9 @@ function HomePage() {
                 flex: 1,
                 // backgroundColor: "red",
             }}>
-                <Menu />
+                <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro}/>
                 <Header />
-                <Timeline playlists={config.playlists} favoritos={config.favoritos}>
+                <Timeline playlists={config.playlists} favoritos={config.favoritos} searchValue={valorDoFiltro} >
                     Conteúdo
                 </Timeline>
             </div>
@@ -42,18 +44,12 @@ export default HomePage
 
 
 const StyledHeader = styled.div`
-    .imagemBanner{
-        width: 100%;
-        height: 350px;
-        object-fit: cover;
-    }
     .imagemPerfil {
         width: 80px;
         height: 80px;
         border-radius: 50%;
     }
     .user-info {
-        margin-top: 30px;
         display: flex;
         align-items: center;
         width: 100%;
@@ -61,10 +57,17 @@ const StyledHeader = styled.div`
         gap: 16px;
     }
 `;
+
+const StyledBanner = styled.div`
+    background-color: blue;
+    background-image: url(${({ bg }) => bg});
+    /* background-image: url(${config.bg}); */
+    height: 230px;
+`;
 function Header() {
     return (
-        <StyledHeader>
-            <img className="imagemBanner" src="https://images.unsplash.com/photo-1548602088-9d12a4f9c10f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2052&q=80" />
+        <StyledHeader >
+            <StyledBanner bg={config.bg}/>
             <section className="user-info">
                 <img className="imagemPerfil" src={`https://github.com/${config.github}.png`} />
                 <div>
@@ -80,7 +83,7 @@ function Header() {
     )
 }
 
-function Timeline(propriedades) {
+function Timeline( { searchValue, ...propriedades } ) {
     const playlistNames = Object.keys(propriedades.playlists);
     const favoritos = Object.keys(propriedades.favoritos)
 
@@ -88,15 +91,20 @@ function Timeline(propriedades) {
         <StyledTimeline>
             {playlistNames.map((playlistName) => {
                 const videos = propriedades.playlists[playlistName];
-                console.log(playlistName);
-                console.log(videos);
+                // console.log(playlistName);
+                // console.log(videos);
                 return (
-                    <section className="secaoVideos">
+                    <section key={playlistName} className="secaoVideos">
                         <h2>{playlistName}</h2>
                         <div>
-                            {videos.map((video) => {
+                            {videos.filter((item) => {
+                                const titleNormalized = item.title.toLowerCase();
+                                const searchValueNormalized = searchValue.toLowerCase();
+                                return titleNormalized.includes(searchValueNormalized);
+
+                            }).map((video) => {
                                 return (
-                                    <a href={video.url}>
+                                    <a key={video.url} href={video.url}>
                                         <img className="imagemVideo" src={video.thumb} />
                                         <span>
                                             {video.title}
@@ -111,15 +119,15 @@ function Timeline(propriedades) {
             })}
             {favoritos.map((favorito) => {
                 const fotos = propriedades.favoritos[favorito]
-                console.log(favorito)
-                console.log(fotos)
+                // console.log(favorito)
+                // console.log(fotos)
                 return (
-                    <section>
+                    <section key={favorito}>
                         <h2>{favorito}</h2>
                         <div className="divFavoritos">
                             {fotos.map((fotos) => {
                                 return (
-                                    <div className="fotoName">
+                                    <div key={fotos.nome} className="fotoName">
                                         <img className="imagemYoutuber" src={`https://github.com/${fotos.github}.png`} />
                                         <span>
                                             {fotos.nome}

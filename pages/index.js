@@ -3,11 +3,36 @@ import config from "../config.json";
 import styled from "styled-components";
 import Menu from "../src/components/Menu/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
+import { videoService } from "../src/services/videoService";
+
+
 
 function HomePage() {
+    const service = videoService();
     const [valorDoFiltro, setValorDoFiltro] = React.useState("");
-    
+    const [playlists, setPlaylists] = React.useState({});
+  
+    React.useEffect(() => {
+        service.getAllVideos()
+        .then((dados) => {
+            console.log(dados.data);
+            const novasPlaylists = { ...playlists };
+            console.log(novasPlaylists);
+            dados.data.forEach((video) => {
+                if (!novasPlaylists[video.playlist]) {
+                    novasPlaylists[video.playlist] = [];
+                }
+                novasPlaylists[video.playlist].push(video);
+            })
+            setPlaylists(novasPlaylists)
+        });
 
+        
+    }, [])
+
+    console.log("Playlists Pronto", playlists)
+
+    
     return (
         <>
             <div style={{
